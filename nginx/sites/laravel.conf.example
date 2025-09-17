@@ -1,21 +1,32 @@
-#server {
-#    listen 80;
-#    server_name laravel.com.co;
-#    return 301 https://laravel.com.co$request_uri;
-#}
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name laravel.test www.laravel.test;
+
+#     location /.well-known/acme-challenge/ {
+#         root /var/www/letsencrypt;
+#     }
+
+#     location / {
+#         return 301 https://$host$request_uri;
+#     }
+# }
 
 server {
-
     listen 80;
     listen [::]:80;
 
     # For https
     # listen 443 ssl;
-    # listen [::]:443 ssl ipv6only=on;
+    # listen [::]:443 ssl;
+    # Self certificates #
     # ssl_certificate /etc/nginx/ssl/default.crt;
     # ssl_certificate_key /etc/nginx/ssl/default.key;
+    # Certbot certificates #
+    # ssl_certificate /etc/letsencrypt/live/laravel.test/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/laravel.test/privkey.pem;
 
-    server_name laravel.test;
+    server_name laravel.test www.laravel.test;
     root /var/www/laravel/public;
     index index.php index.html index.htm;
 

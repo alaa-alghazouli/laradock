@@ -1,24 +1,32 @@
-server {
-    listen 80;
-    listen [::]:80;
-    server_name www.confluence-domain.com;
-    rewrite ^(.*) https://confluence-domain.com$1/ permanent;
-}
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name confluence-domain.com www.confluence-domain.com;
+
+#     location /.well-known/acme-challenge/ {
+#         root /var/www/letsencrypt;
+#     }
+
+#     location / {
+#         return 301 https://$host$request_uri;
+#     }
+# }
 
 server {
     listen 80;
     listen [::]:80;
-    server_name confluence-domain.com;
-    rewrite ^(.*) https://confluence-domain.com/ permanent;
-}
 
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    ssl_certificate /etc/nginx/ssl/confluence-domain.com.crt;
-    ssl_certificate_key /etc/nginx/ssl/confluence-domain.com.key;
+    # For https
+    # listen 443 ssl;
+    # listen [::]:443 ssl;
+    # Self certificate #
+    # ssl_certificate /etc/nginx/ssl/confluence-domain.com.crt;
+    # ssl_certificate_key /etc/nginx/ssl/confluence-domain.com.key;
+    # Certbot certificate #
+    # ssl_certificate /etc/letsencrypt/live/confluence-domain.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/confluence-domain.com/privkey.pem;
 
-    server_name confluence-domain.com;
+    server_name confluence-domain.com www.confluence-domain.com;
 
     location / {
             client_max_body_size 100m;
@@ -38,6 +46,11 @@ server {
         proxy_set_header Connection "Upgrade";
     }
 
-    error_log /var/log/nginx/bookchangerru_error.log;
-    access_log /var/log/nginx/bookchangerru_access.log;
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt/;
+        log_not_found off;
+    }
+
+    error_log /var/log/nginx/confluence_error.log;
+    access_log /var/log/nginx/confluence_access.log;
 }

@@ -1,15 +1,32 @@
-server {
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name app.test www.app.test;
 
+#     location /.well-known/acme-challenge/ {
+#         root /var/www/letsencrypt;
+#     }
+
+#     location / {
+#         return 301 https://$host$request_uri;
+#     }
+# }
+
+server {
     listen 80;
     listen [::]:80;
 
     # For https
     # listen 443 ssl;
-    # listen [::]:443 ssl ipv6only=on;
+    # listen [::]:443 ssl;
+    # Self certificate #
     # ssl_certificate /etc/nginx/ssl/default.crt;
     # ssl_certificate_key /etc/nginx/ssl/default.key;
+    # Certbot certificate #
+    # ssl_certificate /etc/letsencrypt/live/app.test/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/app.test/privkey.pem;
 
-    server_name app.test;
+    server_name app.test www.app.test;
     root /var/www/app;
     index index.php index.html index.htm;
 

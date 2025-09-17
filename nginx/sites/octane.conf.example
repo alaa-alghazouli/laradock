@@ -8,10 +8,35 @@ upstream octane {
     keepalive 16;
 }
 
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name octane.test www.octane.test;
+#
+#     location /.well-known/acme-challenge/ {
+#         root /var/www/letsencrypt;
+#     }
+
+#     location / {
+#         return 301 https://$host$request_uri;
+#     }
+# }
+
 server {
     listen 80;
     listen [::]:80;
-    server_name octane.test;
+
+    # For https
+    # listen 443 ssl;
+    # listen [::]:443 ssl;
+    # Self certificates #
+    # ssl_certificate /etc/nginx/ssl/default.crt;
+    # ssl_certificate_key /etc/nginx/ssl/default.key;
+    # Certbot certificates #
+    # ssl_certificate /etc/letsencrypt/live/octane.test/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/octane.test/privkey.pem;
+
+    server_name octane.test www.octane.test;
     server_tokens off;
     root /var/www/octane/public;
 
@@ -49,6 +74,11 @@ server {
         proxy_set_header Connection $connection_upgrade;
 
         proxy_pass http://octane$suffix;
+    }
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt/;
+        log_not_found off;
     }
 
     error_log  /var/log/nginx/octane_error.log;

@@ -1,13 +1,30 @@
-server {
+# server {
+#     listen 80;
+#     listen [::]:80;
+#     server_name symfony.test www.symfony.test;
+#
+#     location /.well-known/acme-challenge/ {
+#         root /var/www/letsencrypt;
+#     }
 
+#     location / {
+#         return 301 https://$host$request_uri;
+#     }
+# }
+
+server {
     listen 80;
     listen [::]:80;
 
     # For https
     # listen 443 ssl;
-    # listen [::]:443 ssl ipv6only=on;
+    # listen [::]:443 ssl;
+    # Self certificates #
     # ssl_certificate /etc/nginx/ssl/default.crt;
     # ssl_certificate_key /etc/nginx/ssl/default.key;
+    # Certbot certificates #
+    # ssl_certificate /etc/letsencrypt/live/symfony.test/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/symfony.test/privkey.pem;
 
     server_name symfony.test;
     root /var/www/projects/symfony/web;
@@ -35,6 +52,11 @@ server {
         #fixes timeouts
         fastcgi_read_timeout 600;
         fastcgi_param HTTPS off;
+    }
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt/;
+        log_not_found off;
     }
 
     error_log /var/log/nginx/symfony_error.log;

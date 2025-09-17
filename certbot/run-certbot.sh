@@ -95,13 +95,15 @@ while true; do
     echo "[certbot] Running renew @ $(date)"
 
     case "$CERTBOT_ENVIRONMENT" in
-        production|staging)
+        production)
             if [ "$USE_CLOUDFLARE_CHALLENGE" = "true" ]; then
+                echo "[certbot] Renewing against PRODUCTION CA (Cloudflare)"
                 certbot renew \
                     --quiet \
                     --deploy-hook "docker exec nginx nginx -s reload" \
                     || echo "[certbot] Renewal attempt failed"
             else
+                echo "[certbot] Renewing against PRODUCTION CA (Webroot)"
                 certbot renew \
                     --quiet \
                     --deploy-hook "/root/copy-certs.sh ${PRIMARY_DOMAIN} && docker exec nginx nginx -s reload" \
@@ -110,6 +112,14 @@ while true; do
             ;;
         local)
             echo "[certbot] Skipping renew in local environment (self-signed cert)"
+            ;;
+        staging)
+            echo "[certbot] Renewing against STAGING CA"
+            certbot renew \
+                --staging \
+                --quiet \
+                --deploy-hook "/root/copy-certs.sh ${PRIMARY_DOMAIN} && docker exec nginx nginx -s reload" \
+                || echo "[certbot] Renewal attempt failed"
             ;;
     esac
 
