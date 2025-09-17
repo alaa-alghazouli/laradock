@@ -25,6 +25,7 @@ if [ "$USE_CLOUDFLARE_CHALLENGE" = "true" ]; then
             --dns-cloudflare-propagation-seconds 60 \
             --non-interactive \
             --agree-tos \
+            --email "$CERTBOT_EMAIL" \
             $(echo "$CERTBOT_CN" | sed 's/,/ -d /g' | sed 's/^/-d /')
     fi
 
