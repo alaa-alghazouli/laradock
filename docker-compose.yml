@@ -1215,6 +1215,7 @@ services:
         - ${DATA_PATH_HOST}/certbot/cloudflare:/root/.secrets/certbot
         - /var/run/docker.sock:/var/run/docker.sock
       environment:
+        - CERTBOT_ENVIRONMENT=${CERTBOT_ENVIRONMENT}
         - CERTBOT_CN=${CERTBOT_CN}
         - CERTBOT_EMAIL=${CERTBOT_EMAIL}
         - USE_CLOUDFLARE_CHALLENGE=${USE_CLOUDFLARE_CHALLENGE}
