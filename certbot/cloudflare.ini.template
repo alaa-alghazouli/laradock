@@ -1,0 +1,2 @@
+dns_cloudflare_email= ${CERTBOT_EMAIL}
+dns_cloudflare_api_token = ${CLOUDFLARE_API_TOKEN}
